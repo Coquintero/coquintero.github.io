@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Enlace Médico HN-Colombia — Prototipo</title>
+<style>
+  :root{
+    --bg: #EEF0E9;
+    --bg-alt: #E4E9E0;
+    --ink: #16241D;
+    --ink-soft: #4B564E;
+    --primary: #1F4A3D;
+    --primary-light: #3E6F5C;
+    --accent: #B8862E;
+    --accent-soft: #E9D6AC;
+    --line: #CBD2C5;
+    --card: #FFFFFF;
+    --radius: 3px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family: "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size:16px;
+    line-height:1.55;
+  }
+  h1,h2,h3{
+    font-family: Georgia, "Iowan Old Style", "Times New Roman", serif;
+    font-weight:400;
+    margin:0;
+    color:var(--ink);
+  }
+  a{color:inherit;}
+  .wrap{max-width:1080px; margin:0 auto; padding:0 32px;}
+  @media (max-width:700px){ .wrap{padding:0 20px;} }
+
+  header{
+    padding:20px 0;
+    border-bottom:1px solid var(--line);
+    background:var(--card);
+  }
+  header .wrap{display:flex; align-items:center; justify-content:space-between;}
+  .brand{display:flex; align-items:center; gap:10px;}
+  .brand-mark{
+    width:34px; height:34px;
+    border-radius:50%;
+    background:var(--primary);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .brand-mark svg{width:18px; height:18px;}
+  .brand-name{font-family:Georgia, serif; font-size:19px; color:var(--primary);}
+  nav{display:flex; gap:26px; font-size:14px; color:var(--ink-soft);}
+  nav a{text-decoration:none;}
+  nav a:hover{color:var(--primary);}
+  .nav-cta{
+    display:inline-flex; align-items:center; gap:8px;
+    background:var(--primary); color:#fff;
+    padding:10px 18px;
+    border-radius:var(--radius);
+    text-decoration:none;
+    font-size:14px;
+    white-space:nowrap;
+  }
+  @media (max-width:820px){ nav{display:none;} }
+
+  /* HERO — imagen grande al inicio */
+  .hero-visual{
+    position:relative;
+    width:100%;
+    height:min(64vh, 560px);
+    min-height:380px;
+    background:linear-gradient(180deg, #163830 0%, #1F4A3D 55%, #2C5C4C 100%);
+    overflow:hidden;
+    display:flex;
+    align-items:flex-end;
+  }
+  .hero-visual svg.route{
+    position:absolute; inset:0;
+    width:100%; height:100%;
+  }
+  .hero-copy{
+    position:relative;
+    z-index:2;
+    width:100%;
+    padding:0 32px 56px;
+    max-width:1080px;
+    margin:0 auto;
+  }
+  .hero-copy .eyebrow-free{color:#CBE0D3; font-size:15px; margin-bottom:14px; max-width:480px;}
+  .hero-copy h1{
+    color:#fff;
+    font-size:46px;
+    line-height:1.14;
+    max-width:640px;
+  }
+  @media (max-width:600px){ .hero-copy h1{font-size:32px;} .hero-visual{height:520px;} }
+  .hero-actions{display:flex; gap:14px; margin-top:30px; flex-wrap:wrap;}
+  .btn{
+    padding:13px 24px;
+    border-radius:var(--radius);
+    text-decoration:none;
+    font-size:15px;
+    display:inline-block;
+  }
+  .btn-primary{background:var(--accent); color:#231800;}
+  .btn-ghost{border:1px solid rgba(255,255,255,.5); color:#fff;}
+
+  /* SECTIONS */
+  section{padding:64px 0;}
+  .section-head{max-width:600px; margin-bottom:40px;}
+  .section-head h2{font-size:30px;}
+  .section-head p{color:var(--ink-soft); margin-top:12px; font-size:16px;}
+
+  /* QUE HACEMOS */
+  .role-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:1px; background:var(--line); border:1px solid var(--line);}
+  @media (max-width:700px){ .role-grid{grid-template-columns:1fr;} }
+  .role-card{background:var(--card); padding:30px;}
+  .role-card h3{font-size:18px; margin-bottom:10px;}
+  .role-card p{font-size:14.5px; color:var(--ink-soft);}
+
+  /* PROCESO */
+  .timeline{display:grid; grid-template-columns:repeat(5,1fr); gap:0;}
+  @media (max-width:900px){ .timeline{grid-template-columns:1fr; gap:28px;} }
+  .step{position:relative; padding-left:20px; border-left:1px solid var(--line);}
+  .step:first-child{border-left:none; padding-left:0;}
+  @media (max-width:900px){ .step{border-left:none; padding-left:0;} }
+  .step .num{font-family:Georgia, serif; font-size:24px; color:var(--accent); margin-bottom:10px;}
+  .step h3{font-size:15.5px; margin-bottom:8px;}
+  .step p{font-size:13.5px; color:var(--ink-soft);}
+
+  /* SERVICIOS */
+  .services-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line); border:1px solid var(--line);}
+  @media (max-width:700px){ .services-grid{grid-template-columns:1fr;} }
+  .service-card{background:var(--card); padding:28px;}
+  .service-card h3{font-size:17px; margin-bottom:10px;}
+  .service-card p{font-size:14.5px; color:var(--ink-soft);}
+
+  /* CONFIANZA */
+  .split{background:var(--bg-alt);}
+  .split .wrap{display:grid; grid-template-columns:1fr 1fr; gap:56px;}
+  @media (max-width:800px){ .split .wrap{grid-template-columns:1fr;} }
+  .trust-item{display:flex; gap:14px; padding:16px 0; border-bottom:1px solid var(--line);}
+  .trust-item:last-child{border-bottom:none;}
+  .trust-icon{width:30px; height:30px; flex-shrink:0; display:flex; align-items:center; justify-content:center;}
+  .trust-icon svg{width:22px; height:22px; stroke:var(--primary);}
+  .trust-item h3{font-size:15.5px; margin-bottom:4px;}
+  .trust-item p{font-size:14px; color:var(--ink-soft);}
+
+  .route-card{border:1px solid var(--line); border-radius:6px; background:var(--card); padding:22px;}
+  .route-card .label{font-size:12px; color:var(--ink-soft); margin-bottom:16px;}
+  .route-line{display:flex; align-items:center; gap:10px; margin-bottom:6px;}
+  .route-line .city{font-family:Georgia, serif; font-size:20px; color:var(--primary);}
+  .route-line svg{width:18px; height:18px; stroke:var(--accent);}
+
+  /* CHAT MOCKUP */
+  .chat-section .wrap{display:grid; grid-template-columns:.9fr 1.1fr; gap:56px; align-items:center;}
+  @media (max-width:800px){ .chat-section .wrap{grid-template-columns:1fr;} }
+  .chat-frame{background:var(--card); border:1px solid var(--line); border-radius:10px; overflow:hidden;}
+  .chat-head{background:var(--primary); color:#fff; padding:14px 18px; font-size:14px; display:flex; align-items:center; gap:10px;}
+  .chat-head .dot{width:8px; height:8px; border-radius:50%; background:#7CD9B4;}
+  .chat-body{padding:20px; display:flex; flex-direction:column; gap:12px; background:#F6F5F0;}
+  .bubble{max-width:82%; padding:10px 14px; border-radius:12px; font-size:14px; line-height:1.4;}
+  .bubble.in{background:#fff; border:1px solid var(--line); align-self:flex-start; border-bottom-left-radius:3px;}
+  .bubble.out{background:var(--primary); color:#fff; align-self:flex-end; border-bottom-right-radius:3px;}
+  .chat-input-mock{padding:12px 16px; border-top:1px solid var(--line); color:var(--ink-soft); font-size:13px; background:#fff;}
+
+  /* TESTIMONIOS */
+  .testi-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:24px;}
+  @media (max-width:800px){ .testi-grid{grid-template-columns:1fr;} }
+  .testi{background:var(--card); border:1px solid var(--line); border-radius:6px; padding:24px;}
+  .testi p.quote{font-size:15px; color:var(--ink);}
+  .testi .who{margin-top:14px; font-size:13px; color:var(--ink-soft);}
+
+  /* CTA FINAL */
+  .cta-final{background:var(--primary); color:#F1EFE6;}
+  .cta-final .wrap{text-align:center; padding:70px 32px;}
+  .cta-final h2{color:#fff; font-size:32px; max-width:580px; margin:0 auto;}
+  .cta-final p{color:#CBD9CF; margin-top:14px; font-size:16px;}
+  .cta-final .btn-primary{margin-top:26px;}
+
+  footer{padding:28px 0; border-top:1px solid var(--line);}
+  footer .wrap{display:flex; justify-content:space-between; align-items:center; font-size:13px; color:var(--ink-soft);}
+  @media (max-width:600px){ footer .wrap{flex-direction:column; gap:10px; text-align:center;} }
+
+  .wa-float{
+    position:fixed; bottom:22px; right:22px;
+    width:54px; height:54px; border-radius:50%;
+    background:var(--accent);
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 4px 14px rgba(0,0,0,.18);
+    z-index:50;
+  }
+  .wa-float svg{width:26px; height:26px; fill:#231800;}
+
+  /* STATS STRIP */
+  .stats-strip{
+    background:var(--card);
+    border-bottom:1px solid var(--line);
+    padding:26px 0;
+  }
+  .stats-strip .wrap{
+    display:grid; grid-template-columns:repeat(3,1fr); gap:24px;
+  }
+  @media (max-width:700px){ .stats-strip .wrap{grid-template-columns:1fr; gap:18px; text-align:center;} }
+  .stat .n{font-family:Georgia, serif; font-size:30px; color:var(--primary);}
+  .stat .l{font-size:13.5px; color:var(--ink-soft); margin-top:2px;}
+
+  /* FAQ */
+  .faq-list{max-width:720px;}
+  .faq-item{border-bottom:1px solid var(--line); padding:20px 0;}
+  .faq-item h3{font-size:16.5px; margin-bottom:8px; font-family:Georgia,serif; font-weight:400;}
+  .faq-item p{font-size:14.5px; color:var(--ink-soft); margin:0;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="brand">
+      <div class="brand-mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#F1EFE6" stroke-width="1.6"><path d="M3 12h4l2-4 3 8 2-5 2 3h5"/></svg>
+      </div>
+      <span class="brand-name">Enlace Médico</span>
+    </div>
+    <nav>
+      <a href="#que-hacemos">Qué hacemos</a>
+      <a href="#proceso">Cómo funciona</a>
+      <a href="#servicios">Procedimientos</a>
+      <a href="#confianza">Confianza</a>
+    </nav>
+    <a class="nav-cta" href="#chat">Escríbenos</a>
+  </div>
+</header>
+
+<!-- HERO: imagen grande al inicio -->
+<div class="hero-visual">
+  <svg class="route" viewBox="0 0 1200 560" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <radialGradient id="glow" cx="50%" cy="30%" r="70%">
+        <stop offset="0%" stop-color="#3E6F5C" stop-opacity="0.55"/>
+        <stop offset="100%" stop-color="#163830" stop-opacity="0"/>
+      </radialGradient>
+    </defs>
+    <rect width="1200" height="560" fill="url(#glow)"/>
+    <g fill="#CBE0D3" opacity="0.25">
+      <circle cx="120" cy="90" r="1.6"/><circle cx="260" cy="140" r="1.2"/><circle cx="940" cy="80" r="1.6"/>
+      <circle cx="1040" cy="160" r="1.2"/><circle cx="700" cy="60" r="1.4"/><circle cx="400" cy="50" r="1.2"/>
+      <circle cx="180" cy="220" r="1.2"/><circle cx="1090" cy="260" r="1.4"/>
+    </g>
+    <path d="M 260 400 Q 620 190 940 380" fill="none" stroke="#E9D6AC" stroke-width="2.5" stroke-dasharray="2 10" stroke-linecap="round"/>
+    <circle cx="260" cy="400" r="7" fill="#E9D6AC"/>
+    <circle cx="260" cy="400" r="14" fill="none" stroke="#E9D6AC" stroke-width="1.4" opacity="0.6"/>
+    <text x="260" y="432" fill="#F1EFE6" font-family="Georgia, serif" font-size="19" text-anchor="middle">Honduras</text>
+    <circle cx="940" cy="380" r="7" fill="#E9D6AC"/>
+    <circle cx="940" cy="380" r="14" fill="none" stroke="#E9D6AC" stroke-width="1.4" opacity="0.6"/>
+    <text x="940" y="412" fill="#F1EFE6" font-family="Georgia, serif" font-size="19" text-anchor="middle">Colombia</text>
+    <g transform="translate(600,250) rotate(-18)">
+      <path d="M0 0 L26 4 L4 10 L0 22 L-4 10 L-26 4 Z" fill="#F1EFE6" opacity="0.9"/>
+    </g>
+  </svg>
+  <div class="hero-copy">
+    <div class="eyebrow-free">Coordinación integral de viajes médicos entre Honduras y Colombia.</div>
+    <h1>Te conectamos con el médico en Colombia y nos encargamos de todo el viaje.</h1>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="#chat">Escríbenos por WhatsApp</a>
+      <a class="btn btn-ghost" href="#que-hacemos">Ver qué incluye</a>
+    </div>
+  </div>
+</div>
+
+<div class="stats-strip">
+  <div class="wrap">
+    <div class="stat"><div class="n">+120</div><div class="l">Pacientes acompañados</div></div>
+    <div class="stat"><div class="n">15</div><div class="l">Especialistas aliados en Colombia</div></div>
+    <div class="stat"><div class="n">100%</div><div class="l">Viajes con acompañamiento completo</div></div>
+  </div>
+</div>
+
+<section id="que-hacemos">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Qué hacemos</h2>
+      <p>No solo coordinamos traslados: acompañamos todo el proceso, desde el primer contacto con el médico hasta el regreso a casa.</p>
+    </div>
+    <div class="role-grid">
+      <div class="role-card">
+        <h3>Contacto con el médico en Colombia</h3>
+        <p>Conectamos al paciente con el especialista adecuado y damos seguimiento a la comunicación antes del viaje.</p>
+      </div>
+      <div class="role-card">
+        <h3>Logística del viaje</h3>
+        <p>Vuelos, hospedaje y fechas coordinadas según la agenda del procedimiento.</p>
+      </div>
+      <div class="role-card">
+        <h3>Traslados en ambos países</h3>
+        <p>Movilización dentro de Honduras hacia el aeropuerto, y en Colombia entre el hotel y la clínica.</p>
+      </div>
+      <div class="role-card">
+        <h3>Acompañamiento del paciente</h3>
+        <p>Seguimiento antes, durante y después del procedimiento, hasta el regreso a Honduras.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="proceso" style="background:var(--bg-alt);">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Cómo funciona</h2>
+      <p>Cinco pasos, desde la primera consulta hasta el regreso a casa.</p>
+    </div>
+    <div class="timeline">
+      <div class="step">
+        <div class="num">1</div>
+        <h3>Nos escribes por WhatsApp</h3>
+        <p>Nos cuentas el procedimiento que necesitas y tus fechas disponibles.</p>
+      </div>
+      <div class="step">
+        <div class="num">2</div>
+        <h3>Te conectamos con el médico</h3>
+        <p>Coordinamos la evaluación y confirmación con el especialista en Colombia.</p>
+      </div>
+      <div class="step">
+        <div class="num">3</div>
+        <h3>Armamos tu viaje</h3>
+        <p>Vuelos, hospedaje y traslados quedan listos antes de tu salida.</p>
+      </div>
+      <div class="step">
+        <div class="num">4</div>
+        <h3>Te acompañamos allá</h3>
+        <p>Del hotel a la clínica y de vuelta, durante todo tu procedimiento.</p>
+      </div>
+      <div class="step">
+        <div class="num">5</div>
+        <h3>Regresas a casa</h3>
+        <p>Coordinamos tu vuelo y traslado final de vuelta en Honduras.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="servicios">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Procedimientos que coordinamos</h2>
+      <p>Pensado para pacientes que viajan desde Honduras buscando atención especializada.</p>
+    </div>
+    <div class="services-grid">
+      <div class="service-card">
+        <h3>Cirugías especializadas</h3>
+        <p>Procedimientos que requieren un especialista específico en Colombia.</p>
+      </div>
+      <div class="service-card">
+        <h3>Tratamientos estéticos</h3>
+        <p>Coordinación completa, desde la consulta hasta la recuperación.</p>
+      </div>
+      <div class="service-card">
+        <h3>Estudios y diagnósticos</h3>
+        <p>Exámenes especializados no disponibles localmente.</p>
+      </div>
+      <div class="service-card">
+        <h3>Segundas opiniones médicas</h3>
+        <p>Consultas con especialistas para confirmar un diagnóstico o tratamiento.</p>
+      </div>
+      <div class="service-card">
+        <h3>Tratamientos de recuperación</h3>
+        <p>Terapias y seguimiento post-procedimiento durante la estadía.</p>
+      </div>
+      <div class="service-card">
+        <h3>Casos de acompañante</h3>
+        <p>Coordinación de viaje también para un familiar que acompañe al paciente.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="confianza" class="split">
+  <div class="wrap">
+    <div>
+      <div class="section-head" style="margin-bottom:24px;">
+        <h2>Confianza en cada etapa</h2>
+        <p>Viajar a otro país para un procedimiento médico genera muchas preguntas. Estamos con el paciente en cada una.</p>
+      </div>
+      <div class="trust-item">
+        <div class="trust-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M12 2l8 3v6c0 5-3.4 8.5-8 11-4.6-2.5-8-6-8-11V5l8-3z"/></svg></div>
+        <div><h3>Red de médicos verificados</h3><p>Especialistas con los que mantenemos comunicación directa.</p></div>
+      </div>
+      <div class="trust-item">
+        <div class="trust-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M4 12h16M12 4v16"/></svg></div>
+        <div><h3>Costos claros desde el inicio</h3><p>Sabes qué incluye tu viaje antes de confirmarlo.</p></div>
+      </div>
+      <div class="trust-item">
+        <div class="trust-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M12 3l7 4v5c0 5-3 8-7 9-4-1-7-4-7-9V7l7-4z"/></svg></div>
+        <div><h3>Acompañamiento constante</h3><p>Un contacto disponible durante todo el viaje, no solo al inicio.</p></div>
+      </div>
+    </div>
+    <div>
+      <div class="route-card">
+        <div class="label">Ruta de ejemplo</div>
+        <div class="route-line">
+          <span class="city">San Pedro Sula, HN</span>
+        </div>
+        <div class="route-line">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M12 4v16M12 4l-5 5M12 4l5 5"/></svg>
+          <span style="font-size:13px; color:var(--ink-soft);">Vuelo + traslado al hotel</span>
+        </div>
+        <div class="route-line" style="margin-top:10px;">
+          <span class="city">Bogotá, Colombia</span>
+        </div>
+        <div class="route-line">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M12 4v16M12 4l-5 5M12 4l5 5"/></svg>
+          <span style="font-size:13px; color:var(--ink-soft);">Traslado a la clínica y regreso</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="chat" class="chat-section">
+  <div class="wrap">
+    <div class="section-head" style="margin-bottom:0;">
+      <h2>Empieza contándonos tu caso</h2>
+      <p>Un asistente por WhatsApp recibe tu solicitud, entiende qué procedimiento buscas y la pasa a un asesor para armar tu viaje.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#">Iniciar conversación</a>
+      </div>
+    </div>
+    <div class="chat-frame">
+      <div class="chat-head"><span class="dot"></span> Enlace Médico — Asistente</div>
+      <div class="chat-body">
+        <div class="bubble in">Hola, quiero información sobre una cirugía en Colombia.</div>
+        <div class="bubble out">Con gusto te ayudamos. ¿Qué tipo de procedimiento buscas y tienes ya un médico en mente?</div>
+        <div class="bubble in">No, necesito que me recomienden un especialista.</div>
+        <div class="bubble out">Perfecto, te conectamos con nuestra red de médicos en Colombia. ¿Desde qué ciudad de Honduras viajarías?</div>
+        <div class="bubble in">Desde San Pedro Sula.</div>
+        <div class="bubble out">Listo, un asesor te contacta hoy mismo para coordinar la consulta, el vuelo y el hospedaje.</div>
+      </div>
+      <div class="chat-input-mock">Escribe un mensaje…</div>
+    </div>
+  </div>
+</section>
+
+<section style="background:var(--bg-alt);">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Lo que dicen quienes ya viajaron</h2>
+    </div>
+    <div class="testi-grid">
+      <div class="testi">
+        <p class="quote">Desde el primer contacto hasta el regreso a casa, siempre supe qué seguía. No tuve que organizar nada yo.</p>
+        <div class="who">Paciente, cirugía especializada</div>
+      </div>
+      <div class="testi">
+        <p class="quote">Nos ayudaron a encontrar al especialista correcto y coordinaron todo el viaje con mi mamá.</p>
+        <div class="who">Familiar de paciente</div>
+      </div>
+      <div class="testi">
+        <p class="quote">El acompañamiento en Colombia fue clave, no me sentí sola en ningún momento del proceso.</p>
+        <div class="who">Paciente, tratamiento especializado</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Preguntas frecuentes</h2>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item">
+        <h3>¿Yo elijo al médico o ustedes lo recomiendan?</h3>
+        <p>Ambas opciones son posibles. Si ya tienes un especialista en mente, coordinamos directamente con él. Si no, te recomendamos uno de nuestra red según tu caso.</p>
+      </div>
+      <div class="faq-item">
+        <h3>¿Qué incluye el acompañamiento?</h3>
+        <p>Traslados en Honduras y Colombia, seguimiento durante el procedimiento y disponibilidad de contacto durante todo el viaje.</p>
+      </div>
+      <div class="faq-item">
+        <h3>¿Puede viajar un acompañante conmigo?</h3>
+        <p>Sí, coordinamos también el viaje de un familiar o acompañante si lo necesitas.</p>
+      </div>
+      <div class="faq-item">
+        <h3>¿Cuánto tiempo antes debo contactarlos?</h3>
+        <p>Recomendamos al menos dos semanas antes de la fecha deseada, para coordinar con calma al médico, los vuelos y el hospedaje.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-final">
+  <div class="wrap">
+    <h2>Tu procedimiento en Colombia, con todo coordinado desde Honduras.</h2>
+    <p>Escríbenos por WhatsApp y empecemos a organizar tu viaje.</p>
+    <a class="btn btn-primary" href="#chat">Escríbenos ahora</a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>Enlace Médico — Honduras · Colombia</span>
+    <span>[Teléfono] · [Correo]</span>
+  </div>
+</footer>
+
+<a class="wa-float" href="#chat" aria-label="WhatsApp">
+  <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.35 5.06L2 22l5.1-1.33A9.94 9.94 0 0012 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm5.2 14.2c-.22.62-1.28 1.18-1.77 1.24-.45.06-.98.09-1.58-.1-.36-.11-.83-.27-1.42-.53-2.5-1.08-4.13-3.6-4.26-3.77-.13-.17-1.02-1.35-1.02-2.58 0-1.22.64-1.83.87-2.08.22-.24.49-.3.65-.3h.47c.15 0 .35-.06.55.42.22.53.73 1.83.8 1.96.07.13.11.29.02.47-.09.17-.13.28-.26.43-.13.15-.28.34-.4.46-.13.13-.27.27-.12.53.15.26.66 1.09 1.42 1.77.98.87 1.8 1.14 2.06 1.27.26.13.41.11.56-.07.15-.17.63-.74.8-1 .17-.26.34-.21.57-.13.24.09 1.5.71 1.76.84.26.13.43.2.5.31.06.11.06.62-.16 1.24z"/></svg>
+</a>
+
+</body>
+</html>
